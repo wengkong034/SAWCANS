@@ -158,8 +158,8 @@
 
       const markers = {};
       let routeControl = null;
-      // Global depot marker variable
       let depotMarker = null;
+      let depotLatLng = null; // global depot position
       let followDepot = true; // default ON
 
       function createColoredIcon(color) {
@@ -182,7 +182,7 @@
       });
 
       navigator.geolocation.watchPosition(position => {
-        const depotLatLng = L.latLng(position.coords.latitude, position.coords.longitude);
+        depotLatLng = L.latLng(position.coords.latitude, position.coords.longitude);
 
         // Update or create depot marker
         if (depotMarker) {
@@ -196,7 +196,7 @@
 
         // === Auto-pan map only if followDepot is enabled ===
         if (followDepot) {
-          map.panTo(depotLatLng);
+          map.setView(depotLatLng, 15);
         }
 
         db.ref('bins').on('value', snapshot => {
