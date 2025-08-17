@@ -101,26 +101,28 @@
         height: calc(100vh - 50px); /* navbar only */
       }
     }
-
-    /* Leaflet Routing Panel */
+    /* Routing panel (desktop) */
     .leaflet-routing-container {
-      max-height: 200px;
+      max-height: 250px;
       overflow-y: auto;
       font-size: 13px;
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      background: white;
     }
 
-    /* On phones: push it down & make scrollable */
+    /* On phones: smaller & scrollable at bottom */
     @media (max-width: 768px) {
       .leaflet-routing-container {
-        position: absolute;
-        bottom: 70px;   /* sits above follow button */
+        position: absolute !important;
+        bottom: 70px;   /* sits above Follow Depot button */
         left: 10px;
         right: 10px;
+        width: auto !important;
         max-height: 120px;
         font-size: 11px;
-        width: auto;
+        overflow-y: auto;
+        z-index: 999;
       }
     }
 
@@ -224,14 +226,18 @@
         maxZoom: 19, attribution: '&copy; OpenStreetMap'
       }).addTo(map);
 
-      const markers = {};
-      let routeControl = null;
-      let depotMarker = null;
-      let depotLatLng = null; // global depot position
-      let followDepot = true; // default ON
+      function getMarkerColor(status) {
+        switch (status.toLowerCase()) {
+          case "full": return "red";
+          case "moderate": return "orange";
+          case "low": return "yellow";
+          case "empty": return "green";
+          default: return "grey";
+        }
+      }
 
       function createColoredIcon(color) {
-        return L.icon({
+        return new L.icon({
           iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
           shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
           iconSize: [25, 41],
@@ -240,6 +246,12 @@
           shadowSize: [41, 41]
         });
       }
+
+      const markers = {};
+      let routeControl = null;
+      let depotMarker = null;
+      let depotLatLng = null; // global depot position
+      let followDepot = true; // default ON
 
       // Handle follow button toggle
       const followBtn = document.getElementById("followBtn");
@@ -268,34 +280,39 @@
         }
 
         db.ref('bins').on('value', snapshot => {
-          const bins = snapshot.val(); if (!bins) return;
+          const bins = snapshot.val(); 
+          if (!bins) return;
+
           const binList = document.getElementById("binList");
           binList.innerHTML = "";
 
-          let total = 0, full = 0, empty = 0;
           const selectedWaypoints = [depotLatLng];
 
+          // ✅ Stats counters
+          let total = 0, full = 0, empty = 0, moderate = 0, low = 0;
+
           for (const key in bins) {
-            const bin = bins[key]; if (!bin.lat || !bin.lng) continue;
+            const bin = bins[key]; 
+            if (!bin.lat || !bin.lng) continue;
+
             total++;
-            const status = bin.status.toLowerCase();
+            const status = bin.status ? bin.status.toLowerCase() : "unknown";
+            
             if (status === "full") full++;
             if (status === "empty") empty++;
+            if (status === "moderate") moderate++;
+            if (status === "low") low++;
 
             const latlng = [bin.lat, bin.lng];
-            const statusColors = {
-              full: "red",
-              moderate: "orange",
-              low: "yellow",
-              empty: "green"
-            };
-
-            const color = statusColors[status] || "grey"; // default grey if unknown
+            const color = getMarkerColor(bin.status);
             const icon = createColoredIcon(color);
 
             if (markers[key]) {
               markers[key].setLatLng(latlng);
-              markers[key].getPopup().setContent(`<b>${bin.name}</b><br>Fill: ${bin.fill}<br>Status: ${bin.status}`);
+              markers[key].setIcon(icon);
+              markers[key].getPopup().setContent(
+                `<b>${bin.name}</b><br>Fill: ${bin.fill}<br>Status: ${bin.status}`
+              );
             } else {
               markers[key] = L.marker(latlng, { icon })
                 .addTo(map)
@@ -333,6 +350,18 @@
               router: L.Routing.osrmv1({ serviceUrl: 'https://router.project-osrm.org/route/v1' })
             }).addTo(map);
           }
+          // Toggle routing panel
+          document.getElementById("toggleDirections").addEventListener("click", () => {
+            const panel = document.querySelector(".leaflet-routing-container");
+            if (!panel) return;
+            if (panel.style.display === "none") {
+              panel.style.display = "block";
+              document.getElementById("toggleDirections").innerText = "📍 Hide Directions";
+            } else {
+              panel.style.display = "none";
+              document.getElementById("toggleDirections").innerText = "📍 Show Directions";
+            }
+          });
         });
       });
     }
