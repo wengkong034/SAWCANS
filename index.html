@@ -167,6 +167,21 @@
       ">
         🚗 Follow Depot: ON
       </button>
+      <!-- Toggle Directions Button -->
+      <button id="toggleDirections" style="
+        position: absolute;
+        bottom: 70px;
+        right: 20px;
+        z-index: 1000;
+        padding: 8px 12px;
+        border: none;
+        background: #28a745;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      ">
+        📍 Show Directions
+      </button>
       <div id="map"></div> 
     </div> 
   </div>
@@ -350,18 +365,18 @@
               router: L.Routing.osrmv1({ serviceUrl: 'https://router.project-osrm.org/route/v1' })
             }).addTo(map);
           }
-          // Toggle routing panel
-          document.getElementById("toggleDirections").addEventListener("click", () => {
-            const panel = document.querySelector(".leaflet-routing-container");
-            if (!panel) return;
-            if (panel.style.display === "none") {
-              panel.style.display = "block";
-              document.getElementById("toggleDirections").innerText = "📍 Hide Directions";
-            } else {
-              panel.style.display = "none";
-              document.getElementById("toggleDirections").innerText = "📍 Show Directions";
-            }
-          });
+        });
+        // Toggle routing panel
+        document.getElementById("toggleDirections").addEventListener("click", () => {
+          const panel = document.querySelector(".leaflet-routing-container");
+          if (!panel) return;
+          if (panel.style.display === "none") {
+             panel.style.display = "block";
+            document.getElementById("toggleDirections").innerText = "📍 Hide Directions";
+           } else {
+            panel.style.display = "none";
+            document.getElementById("toggleDirections").innerText = "📍 Show Directions";
+          }
         });
       });
     }
