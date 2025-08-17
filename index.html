@@ -75,27 +75,33 @@
       overflow-y: auto;
     }
 
-    /* Mobile view (max 768px wide) */
+    /* Add hamburger */
+    #hamburger {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    /* Mobile: sidebar hidden by default */
     @media (max-width: 768px) {
-      #navbar h3 {
-        font-size: 16px;    /* shrink title */
-      }
-      .wrapper {
-        flex-direction: column; /* stack vertically */
+      #hamburger {
+        display: block;
       }
       #sidebar {
-        width: 100%;       /* full width */
-        max-height: 200px; /* collapses to smaller height */
-        overflow-y: auto;
-        border-right: none;
+        display: none; /* hide */
+        width: 100%;
+        max-height: 250px;
         border-bottom: 1px solid #ddd;
       }
+      #sidebar.active {
+        display: block; /* show when active */
+      }
       #map {
-        flex: 1;
-        height: calc(100vh - 200px - 50px); /* full screen minus navbar + sidebar */
+        height: calc(100vh - 50px); /* navbar only */
       }
     }
-    
+
   </style>
 </head>
 <body>
@@ -112,9 +118,10 @@
   <!-- Dashboard --> 
   <div id="dashboard"> 
     <div id="navbar"> 
+      <span id="hamburger" onclick="toggleSidebar()">☰</span>
       <h3>♻️ SAWCANS Dashboard</h3> 
       <button id="logoutBtn" onclick="logout()">Logout</button> 
-    </div> 
+    </div>
     <div class="wrapper"> 
       <div id="sidebar"> 
         <h2>Smart Bins</h2> 
@@ -150,6 +157,10 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
   <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+
     // === Firebase Config ===
     const firebaseConfig = {
       apiKey: "AIzaSyAZeemtLknIl5GiUkVVJzkL5GAWVH2Ur74",
