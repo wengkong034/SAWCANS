@@ -77,21 +77,25 @@
 
     /* Mobile view (max 768px wide) */
     @media (max-width: 768px) {
+      #navbar h3 {
+        font-size: 16px;    /* shrink title */
+      }
       .wrapper {
         flex-direction: column; /* stack vertically */
       }
       #sidebar {
         width: 100%;       /* full width */
-        height: 250px;     /* fixed height so map is still visible */
+        max-height: 200px; /* collapses to smaller height */
+        overflow-y: auto;
         border-right: none;
         border-bottom: 1px solid #ddd;
       }
       #map {
         flex: 1;
-        height: calc(100% - 250px); /* take the rest of the screen */
+        height: calc(100vh - 200px - 50px); /* full screen minus navbar + sidebar */
       }
     }
-
+    
   </style>
 </head>
 <body>
