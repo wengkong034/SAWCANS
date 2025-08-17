@@ -102,6 +102,28 @@
       }
     }
 
+    /* Leaflet Routing Panel */
+    .leaflet-routing-container {
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 13px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    /* On phones: push it down & make scrollable */
+    @media (max-width: 768px) {
+      .leaflet-routing-container {
+        position: absolute;
+        bottom: 70px;   /* sits above follow button */
+        left: 10px;
+        right: 10px;
+        max-height: 120px;
+        font-size: 11px;
+        width: auto;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -242,7 +264,7 @@
 
         // === Auto-pan map only if followDepot is enabled ===
         if (followDepot) {
-          map.panTo(depotLatLng);
+          map.setView(depotLatLng, 15);
         }
 
         db.ref('bins').on('value', snapshot => {
@@ -296,6 +318,8 @@
           document.getElementById("stats").innerHTML = `
             <div class="stat-box"><span>Total Bins</span><b>${total}</b></div>
             <div class="stat-box"><span>Full</span><b>${full}</b></div>
+            <div class="stat-box"><span>Moderate</span><b>${moderate}</b></div>
+            <div class="stat-box"><span>Low</span><b>${low}</b></div>
             <div class="stat-box"><span>Empty</span><b>${empty}</b></div>
           `;
 
