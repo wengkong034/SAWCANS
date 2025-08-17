@@ -61,6 +61,37 @@
       border: none; border-radius: 4px; cursor: pointer; color: white;
     }
     #logoutBtn:hover { background: #b02a37; }
+
+    /* Default (desktop) */
+    .wrapper {
+      display: flex;
+      height: 100%;
+    }
+    #sidebar {
+      width: 300px;
+      background: white;
+      border-right: 1px solid #ddd;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    /* Mobile view (max 768px wide) */
+    @media (max-width: 768px) {
+      .wrapper {
+        flex-direction: column; /* stack vertically */
+      }
+      #sidebar {
+        width: 100%;       /* full width */
+        height: 250px;     /* fixed height so map is still visible */
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+      #map {
+        flex: 1;
+        height: calc(100% - 250px); /* take the rest of the screen */
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -89,8 +120,8 @@
       <!-- Follow Depot Button -->
       <button id="followBtn" style="
         position: absolute;
-        top: 600px;   /* just below navbar */
-        right: 10px;
+        bottom: 20px;
+        right: 20px;
         z-index: 1000;
         padding: 8px 12px;
         border: none;
