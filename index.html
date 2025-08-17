@@ -196,7 +196,7 @@
 
         // === Auto-pan map only if followDepot is enabled ===
         if (followDepot) {
-          map.setView(depotLatLng, 15);
+          map.panTo(depotLatLng);
         }
 
         db.ref('bins').on('value', snapshot => {
