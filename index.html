@@ -13,67 +13,163 @@
 
     /* Login */
     #loginBox {
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
-      height: 100vh; background: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #6dd5fa, #2980b9);
+    font-family: "Segoe UI", sans-serif;
     }
-    input, button {
-      margin: 5px; padding: 10px; width: 250px;
-      border: 1px solid #ccc; border-radius: 6px;
+
+    #loginBox .card {
+    background: #fff;
+    padding: 40px 35px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 320px;
+    animation: fadeIn 0.6s ease-in-out;
     }
-    button { background: #007bff; color: white; border: none; cursor: pointer; }
-    button:hover { background: #0056b3; }
+
+    #loginBox .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    }
+
+    #loginBox .logo span {
+    font-size: 32px;
+    }
+
+    #loginBox h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #007bff;
+    }
+
+    #loginBox .subtitle {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 25px;
+    }
+
+    #loginBox input {
+    margin: 10px 0;
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+    }
+    #loginBox input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0,123,255,0.3);
+    }
+
+    #loginBox button {
+    margin-top: 15px;
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    color: white;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    cursor: pointer;
+    transition: 0.3s;
+    }
+    #loginBox button:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #0056b3, #003f7f);
+    }
+
+    #loginError {
+    margin-top: 10px;
+    font-size: 13px;
+    color: red;
+    min-height: 16px;
+    }
+
+    @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+    }
 
     /* Dashboard */
     #dashboard { display: none; height: 100vh; }
     #map { flex: 1; height: 100%; }
     .wrapper { display: flex; height: 100%; }
 
+    /* Navbar */
+    #navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #ddd;
+    }
+    #navbar .right-group {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    #title {
+      margin: 0;
+      margin-left: 10px; /* space between hamburger and text */
+      font-size: 18px;
+    }
+    #logoutBtn {
+      background: #dc3545; padding: 5px 10px; border: none;
+      border-radius: 4px; cursor: pointer; color: white;
+    }
+    #logoutBtn:hover { background: #b02a37; }
+
     /* Sidebar */
     #sidebar {
       width: 300px; background: white; border-right: 1px solid #ddd;
       padding: 15px; overflow-y: auto;
     }
-    #sidebar h2 { margin: 0 0 10px; }
+    #sidebar h3 {
+      margin-top: 1px; font-size: 15px; color: #333;
+      border-bottom: 1px solid #ddd; padding-bottom: 5px;
+    }
     .stat-box {
       display: flex; justify-content: space-between;
-      padding: 10px; background: #f8f9fa; border-radius: 6px; margin-bottom: 10px;
+      padding: 10px; border-radius: 6px; margin-bottom: 10px;
     }
+    .stat-box.full { background: #ffe5e5; border-left: 5px solid red; }
+    .stat-box.moderate { background: #fff3e0; border-left: 5px solid orange; }
+    .stat-box.low { background: #ffffe0; border-left: 5px solid gold; }
+    .stat-box.empty { background: #e5ffe5; border-left: 5px solid green; }
     .bin-card {
-      border: 1px solid #ddd; padding: 10px; border-radius: 6px;
-      margin-bottom: 10px; font-size: 14px;
+      border: 1px solid #ddd; padding: 12px; border-radius: 8px;
+      margin-bottom: 10px; font-size: 14px; background: #fff;
+      transition: 0.2s;
     }
-    .status {
-      padding: 2px 6px; border-radius: 4px; font-size: 12px; color: white;
-    }
+    .bin-card:hover { background: #f1faff; border-color: #007bff; }
+    .status { padding: 2px 6px; border-radius: 4px; font-size: 12px; color: white; }
     .status.full { background: red; }
     .status.moderate { background: orange; }
-    .status.low { background: yellow; color: black; }
+    .status.low { background: gold; color: black; }
     .status.empty { background: green; }
 
-    /* Navbar */
-    #navbar {
-      background: #007bff; color: white; padding: 10px;
-      display: flex; justify-content: space-between; align-items: center;
+    /* Floating Action Buttons */
+    .floating-btn {
+      position: absolute; right: 20px;
+      border: none; border-radius: 5px;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      cursor: pointer; font-size: 14px;   
+      padding: 8px 14px;
+      white-space: nowrap;
     }
-    #logoutBtn {
-      background: #dc3545; padding: 5px 10px;
-      border: none; border-radius: 4px; cursor: pointer; color: white;
-    }
-    #logoutBtn:hover { background: #b02a37; }
 
-    /* Default (desktop) */
-    .wrapper {
-      display: flex;
-      height: 100%;
-    }
-    #sidebar {
-      width: 300px;
-      background: white;
-      border-right: 1px solid #ddd;
-      padding: 15px;
-      overflow-y: auto;
-    }
+    .floating-btn:hover { transform: scale(1.1); }
+    #followBtn { background: #007bff; color: white; bottom: 60px; }
+    #toggleDirections { background: #28a745; color: white; bottom: 20px; }
 
     /* Add hamburger */
     #hamburger {
@@ -83,24 +179,6 @@
       margin-right: 10px;
     }
 
-    /* Mobile: sidebar hidden by default */
-    @media (max-width: 768px) {
-      #hamburger {
-        display: block;
-      }
-      #sidebar {
-        display: none; /* hide */
-        width: 100%;
-        max-height: 250px;
-        border-bottom: 1px solid #ddd;
-      }
-      #sidebar.active {
-        display: block; /* show when active */
-      }
-      #map {
-        height: calc(100vh - 50px); /* navbar only */
-      }
-    }
     /* Routing panel (desktop) */
     .leaflet-routing-container {
       max-height: 250px;
@@ -111,78 +189,88 @@
       background: white;
     }
 
-    /* On phones: smaller & scrollable at bottom */
+    /* Mobile: sidebar hidden by default */
     @media (max-width: 768px) {
-      .leaflet-routing-container {
-        position: absolute !important;
-        bottom: 70px;   /* sits above Follow Depot button */
-        left: 10px;
-        right: 10px;
-        width: auto !important;
-        max-height: 120px;
-        font-size: 11px;
-        overflow-y: auto;
-        z-index: 999;
+      #hamburger {
+        display: block;
+      }
+      #sidebar {
+        display: none;
+        position: absolute;
+        top: 50px;
+        left: 0;
+        right: 0;
+        background: white;
+        z-index: 1100;
+      }
+      #sidebar.active {
+        display: block; /* show when active */
       }
     }
 
+    /* Mobile adjustment for routing panel as bottom strip */
+    @media (max-width: 768px) {
+      .leaflet-routing-container {
+        position: fixed !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 470px !important;
+        width: 100% !important;
+        
+        max-height: 20vh;        /* only take a narrow strip */
+        overflow-y: auto;        /* scroll if too many steps */
+        
+        font-size: 12px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.95);
+        border-top: 2px solid #ccc;
+        border-radius: 12px 12px 0 0;
+        
+        z-index: 1000;           /* stay above map */
+      }
+    }       
   </style>
 </head>
 <body>
 
   <!-- Login -->
   <div id="loginBox">
-    <h2>Login to SAWCANS</h2>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <p id="loginError" style="color:red;"></p>
+    <div class="card">
+        <div class="logo">
+            <span>♻️</span>
+            <h1>SAWCANS</h1>
+        </div>
+        <p class="subtitle">Smart Automated Waste Collection Navigation System</p>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="📧 Email" required>
+            <input type="password" id="password" placeholder="🔑 Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p id="loginError"></p>
+    </div>
   </div>
 
   <!-- Dashboard --> 
   <div id="dashboard"> 
-    <div id="navbar"> 
+    <div id="navbar">
       <span id="hamburger" onclick="toggleSidebar()">☰</span>
-      <h3>♻️ SAWCANS Dashboard</h3> 
-      <button id="logoutBtn" onclick="logout()">Logout</button> 
+      <div class="right-group">
+        <h2 id="title">♻️ SAWCANS Dashboard</h2>
+        <button id="logoutBtn" onclick="logout()">Logout</button>
+      </div>
     </div>
     <div class="wrapper"> 
-      <div id="sidebar"> 
-        <h2>Smart Bins</h2> 
-        <div id="stats"></div> 
-        <div id="binList"></div> 
-      </div> 
-      <!-- Follow Depot Button -->
-      <button id="followBtn" style="
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        z-index: 1000;
-        padding: 8px 12px;
-        border: none;
-        background: #007bff;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-      ">
-        🚗 Follow Depot: ON
-      </button>
-      <!-- Toggle Directions Button -->
-      <button id="toggleDirections" style="
-        position: absolute;
-        bottom: 70px;
-        right: 20px;
-        z-index: 1000;
-        padding: 8px 12px;
-        border: none;
-        background: #28a745;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-      ">
-        📍 Show Directions
-      </button>
-      <div id="map"></div> 
+        <div id="sidebar">
+            <h3>📊 Statistics</h3> 
+            <div id="stats"></div>
+            <h3>🗑️ Bin List</h3> 
+            <div id="binList"></div> 
+          </div>
+        <div id="map"></div>
+        <!-- Follow Depot Button -->
+        <button id="followBtn" class="floating-btn" title="Follow Depot">🚗 Follow Depot: ON</button>
+        <!-- Toggle Directions Button -->
+        <button id="toggleDirections" class="floating-btn" title="Toggle Directions">📍 Hide Directions</button>
     </div> 
   </div>
 
@@ -214,7 +302,12 @@
     const db = firebase.database();
     const auth = firebase.auth();
 
-    // === Login ===
+    // Login
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();  // prevent page reload
+      login();             // call your existing login() function
+    });
+
     function login() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -228,6 +321,18 @@
           document.getElementById("loginError").innerText = error.message;
         });
     }
+
+    // Allow Enter key even if input is not focused
+    document.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+        const loginBox = document.getElementById("loginBox");
+        if (loginBox && loginBox.style.display !== "none") {
+        e.preventDefault();
+        login(); // call the same login() function
+        }
+    }
+    });
+
     function logout() {
       auth.signOut().then(() => location.reload());
     }
@@ -272,7 +377,7 @@
         followBtn.style.background = followDepot ? "#007bff" : "gray";
       });
 
-      // === Depot live tracking ===
+      // Depot live tracking
       navigator.geolocation.watchPosition(pos => {
         depotLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude);
 
@@ -289,7 +394,7 @@
         updateRoute();
       });
 
-      // === Load Bins from Firebase ===
+      // Load Bins from Firebase
       db.ref('bins').on('value', snapshot => {
         const bins = snapshot.val(); 
         if (!bins) return;
@@ -343,7 +448,7 @@
           <div class="stat-box"><span>Empty</span><b>${empty}</b></div>
         `;
 
-        // ✅ Update route when bins change
+        // Update route when bins change
         updateRoute();
     });
         // Route update
@@ -381,9 +486,7 @@
           }
         }
 
-//      });
-
-      // === Routing panel toggle (bind once) ===
+      // Routing panel toggle (bind once)
       document.getElementById("toggleDirections").addEventListener("click", () => {
         const panel = document.querySelector(".leaflet-routing-container");
         if (!panel) return;
@@ -395,6 +498,7 @@
           document.getElementById("toggleDirections").innerText = "📍 Show Directions";
         }
       });
+      
     }
   </script>
 </body>
