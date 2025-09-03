@@ -5,6 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- style.css -->
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
@@ -128,7 +129,7 @@
       padding: 15px; overflow-y: auto;
     }
     #sidebar h3 {
-      margin-top: 1px; font-size: 15px; color: #333;
+      margin-top: 0; font-size: 15px; color: #333;
       border-bottom: 1px solid #ddd; padding-bottom: 5px;
     }
     .stat-box {
@@ -160,6 +161,7 @@
       cursor: pointer; font-size: 14px;   
       padding: 8px 14px;
       white-space: nowrap;
+      font-family: "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif;
     }
 
     .floating-btn:hover { transform: scale(1.1); }
@@ -171,7 +173,7 @@
       display: none;
       font-size: 24px;
       cursor: pointer;
-      margin-right: 1px;
+      margin-right: 10px;
     }
 
     /* Routing panel (desktop) */
@@ -206,28 +208,27 @@
     /* Mobile adjustment for routing panel as bottom strip */
     @media (max-width: 768px) {
       .leaflet-routing-container {
-        position: fixed !important;
-        top: 50px !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100% !important;
-        
+        position: fixed;
+        top: 50px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
         max-height: 20vh;        /* only take a narrow strip */
         overflow-y: auto;        /* scroll if too many steps */
-        
         font-size: 12px;
         padding: 6px;
         background: rgba(255, 255, 255, 0.95);
         border-top: 2px solid #ccc;
-        border-radius: 12px 12px 0 0;
-        
+        border-radius: 12px 12px 0 0;  
         z-index: 1000;           /* stay above map */
       }
     }       
   </style>
 </head>
-<body>
 
+  <!-- index.html -->
+<body>
   <!-- Login -->
   <div id="loginBox">
     <div class="card">
@@ -267,6 +268,7 @@
     </div> 
   </div>
 
+  <!-- main.js -->
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
@@ -340,10 +342,10 @@
       // Helpers
       function getMarkerColor(status) {
         switch (status?.toLowerCase()) {
-          case "full": return "red";
-          case "moderate": return "orange";
-          case "low": return "yellow";
-          case "empty": return "green";
+          case "overflow": return "red";
+          case "high": return "orange";
+          case "meduim": return "yellow";
+          case "low": return "green";
           default: return "grey";
         }
       }
@@ -371,7 +373,8 @@
       });
 
       // Depot live tracking
-      navigator.geolocation.watchPosition(pos => {
+      navigator.geolocation.watchPosition(
+        pos => {
         depotLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude);
 
         if (depotMarker) {
@@ -382,8 +385,7 @@
         }
 
         if (followDepot) map.panTo(depotLatLng);
-
-        // ✅ Update route whenever depot moves
+        // Update route whenever depot moves
         updateRoute();
       });
 
@@ -430,6 +432,11 @@
           binCard.innerHTML = `<b>${bin.name}</b><br>Fill: ${bin.fill}<br>
             Status: <span class="status ${status}">${bin.status}</span>`;
           binList.appendChild(binCard);
+
+          binCard.addEventListener("click", () => {
+            map.setView(latlng, 18);
+            markers[key].openPopup();
+          });
         }
 
         // Stats
