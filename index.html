@@ -397,7 +397,7 @@
         const binList = document.getElementById("binList");
         binList.innerHTML = "";
 
-        let total = 0, full = 0, empty = 0, moderate = 0, low = 0;
+        let total = 0, overflow = 0, high = 0, medium = 0, low = 0;
 
         for (const key in bins) {
           const bin = bins[key];
@@ -405,9 +405,9 @@
 
           total++;
           const status = bin.status?.toLowerCase() || "unknown";
-          if (status === "full") full++;
-          if (status === "empty") empty++;
-          if (status === "moderate") moderate++;
+          if (status === "overflow") overflow++;
+          if (status === "high") high++;
+          if (status === "medium") medium++;
           if (status === "low") low++;
 
           const latlng = [bin.lat, bin.lng];
@@ -442,10 +442,10 @@
         // Stats
         document.getElementById("stats").innerHTML = `
           <div class="stat-box"><span>Total Bins</span><b>${total}</b></div>
-          <div class="stat-box"><span>Full</span><b>${full}</b></div>
-          <div class="stat-box"><span>Moderate</span><b>${moderate}</b></div>
-          <div class="stat-box"><span>Low</span><b>${low}</b></div>
-          <div class="stat-box"><span>Empty</span><b>${empty}</b></div>
+          <div class="stat-box"><span>Full</span><b>${overflow}</b></div>
+          <div class="stat-box"><span>Moderate</span><b>${high}</b></div>
+          <div class="stat-box"><span>Low</span><b>${medium}</b></div>
+          <div class="stat-box"><span>Empty</span><b>${low}</b></div>
         `;
 
         // Update route when bins change
