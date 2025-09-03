@@ -466,7 +466,7 @@
 
           for (const key in markers) {
             const bin = markers[key].options.binData;
-            if (bin.status?.toLowerCase() === "full" || bin.status?.toLowerCase() === "moderate") {
+            if (bin.status?.toLowerCase() === "overflow" || bin.status?.toLowerCase() === "high") {
               selectedWaypoints.push(markers[key].getLatLng());
             }
           }
