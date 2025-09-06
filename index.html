@@ -429,8 +429,14 @@
           // Sidebar card
           const binCard = document.createElement("div");
           binCard.className = "bin-card";
-          binCard.innerHTML = `<b>${bin.name}</b><br>Fill: ${bin.fill}<br>
-            Status: <span class="status ${status}">${bin.status}</span>`;
+          binCard.innerHTML = `
+            <b>${bin.name}</b><br>
+            Fill: ${bin.fill}<br>
+            Status: <span class="status ${status}">${bin.status}</span><br>
+            <span style="font-size: 12px; color: gray;">
+              Last Updated: 📅 ${bin.date} ⏰ ${bin.time}
+            </span>
+          `;
           binList.appendChild(binCard);
 
           binCard.addEventListener("click", () => {
