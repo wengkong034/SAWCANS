@@ -5,229 +5,544 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- style.css -->
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <!-- Import Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; }
+    /* Enhanced Color Scheme */
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --medium: #fbbf24;
+      --success: #10b981;
+      --info: #3b82f6;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --gray: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body { 
+      margin: 0; 
+      font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: var(--dark);
+      line-height: 1.6;
+    }
 
     /* Login */
     #loginBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #6dd5fa, #2980b9);
-    font-family: "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
+      font-family: "Inter", sans-serif;
     }
 
     #loginBox .card {
-    background: #fff;
-    padding: 40px 35px;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    text-align: center;
-    width: 320px;
-    animation: fadeIn 0.6s ease-in-out;
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      text-align: center;
+      width: 380px;
+      max-width: 90%;
+      animation: fadeIn 0.6s ease-in-out;
     }
 
     #loginBox .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.2rem;
     }
 
     #loginBox .logo span {
-    font-size: 32px;
+      font-size: 2.5rem;
     }
 
     #loginBox h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #007bff;
+      margin: 0;
+      font-size: 1.8rem;
+      color: var(--primary);
+      font-weight: 700;
+      letter-spacing: -0.5px;
     }
 
     #loginBox .subtitle {
-    font-size: 13px;
-    color: #555;
-    margin-bottom: 25px;
+      font-size: 0.95rem;
+      color: var(--gray);
+      margin-bottom: 1.8rem;
+      line-height: 1.5;
     }
 
     #loginBox input {
-    margin: 10px 0;
-    padding: 12px;
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-    transition: 0.2s;
+      margin: 0.6rem 0;
+      padding: 0.9rem 1rem;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s;
+      background: #f8fafc;
     }
+    
     #loginBox input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0,123,255,0.3);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      background: #fff;
     }
 
     #loginBox button {
-    margin-top: 15px;
-    padding: 12px;
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border: none;
-    font-size: 15px;
-    color: white;
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    cursor: pointer;
-    transition: 0.3s;
+      margin-top: 1rem;
+      padding: 0.9rem;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      cursor: pointer;
+      transition: all 0.3s;
     }
+    
     #loginBox button:hover {
-    transform: translateY(-2px);
-    background: linear-gradient(135deg, #0056b3, #003f7f);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
     }
 
     #loginError {
-    margin-top: 10px;
-    font-size: 13px;
-    color: red;
-    min-height: 16px;
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      color: var(--danger);
+      min-height: 1.4rem;
+      font-weight: 500;
     }
 
     @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Dashboard */
-    #dashboard { display: none; height: 100vh; }
-    #map { flex: 1; height: 100%; }
-    .wrapper { display: flex; height: 100%; }
+    #dashboard { 
+      display: none; 
+      height: 100vh; 
+      background: var(--light);
+    }
+    
+    #map { 
+      flex: 1; 
+      height: 100%; 
+      z-index: 1;
+    }
+    
+    .wrapper { 
+      display: flex; 
+      height: calc(100% - 60px);
+    }
 
     /* Navbar */
     #navbar {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #ddd;
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      padding: 0.8rem 1.5rem; 
+      background: white; 
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      height: 60px;
+      z-index: 1000;
     }
+    
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    
     #title {
       margin: 0;
-      margin-left: 10px; /* space between hamburger and text */
-      font-size: 18px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
+    
     #logoutBtn {
-      background: #dc3545; padding: 5px 10px; border: none;
-      border-radius: 4px; cursor: pointer; color: white;
+      background: var(--danger); 
+      padding: 0.5rem 1rem; 
+      border: none;
+      border-radius: 6px; 
+      cursor: pointer; 
+      color: white;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
     }
-    #logoutBtn:hover { background: #b02a37; }
+    
+    #logoutBtn:hover { 
+      background: #dc2626; 
+      transform: translateY(-1px);
+    }
 
-    /* Sidebar */
+    /* Enhanced Sidebar */
     #sidebar {
-      width: 300px; background: white; border-right: 1px solid #ddd;
-      padding: 15px; overflow-y: auto;
+      width: 340px;
+      background: white; 
+      border-right: 1px solid #e2e8f0;
+      padding: 1.5rem; 
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
     }
+    
+    .sidebar-section {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.2rem;
+    }
+    
     #sidebar h3 {
-      margin-top: 0; font-size: 15px; color: #333;
-      border-bottom: 1px solid #ddd; padding-bottom: 5px;
+      margin: 0 0 1rem 0;
+      font-size: 1rem; 
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
     }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+    
     .stat-box {
-      display: flex; justify-content: space-between;
-      padding: 10px; border-radius: 6px; margin-bottom: 10px;
+      padding: 0.9rem; 
+      border-radius: 10px; 
+      font-weight: 500;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
     }
-    .stat-box.full { background: #ffe5e5; border-left: 5px solid red; }
-    .stat-box.moderate { background: #fff3e0; border-left: 5px solid orange; }
-    .stat-box.low { background: #ffffe0; border-left: 5px solid gold; }
-    .stat-box.empty { background: #e5ffe5; border-left: 5px solid green; }
+    
+    .stat-box:hover {
+      transform: translateY(-2px);
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+    
+    .stat-box.overflow { 
+      background: #fef2f2; 
+      color: var(--danger);
+    }
+    
+    .stat-box.high { 
+      background: #fff9eb; 
+      color: var(--warning);
+    }
+    
+    .stat-box.medium { 
+      background: #fdfec7; 
+      color: var(--medium);
+    }
+    
+    .stat-box.low {
+      background: #f0fdf4; 
+      color: var(--success);
+    }
+
+    .stat-box.total { 
+      background: #eff6ff; 
+      color: var(--primary);
+    }
+
+    .bin-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
     .bin-card {
-      border: 1px solid #ddd; padding: 12px; border-radius: 8px;
-      margin-bottom: 10px; font-size: 14px; background: #fff;
-      transition: 0.2s;
+      border: 1px solid #e2e8f0; 
+      padding: 1rem; 
+      border-radius: 10px;
+      background: #fff;
+      transition: all 0.2s;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
     }
-    .bin-card:hover { background: #f1faff; border-color: #007bff; }
-    .status { padding: 2px 6px; border-radius: 4px; font-size: 12px; color: white; }
-    .status.overflow { background: red; }
-    .status.high { background: orange; }
-    .status.medium { background: gold; color: black; }
-    .status.low { background: green; }
+    
+    .bin-card:hover { 
+      background: #f1f5f9; 
+      border-color: var(--primary); 
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    .bin-card.active {
+      background: #e0f2fe;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+    
+    .bin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .bin-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    
+    .bin-details {
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-top: 0.5rem;
+    }
+    
+    .status { 
+      padding: 0.25rem 0.6rem; 
+      border-radius: 20px; 
+      font-size: 0.75rem; 
+      color: white; 
+      font-weight: 500;
+      display: inline-block;
+    }
+    
+    .status.overflow { background: var(--danger); }
+    .status.high { background: var(--warning); }
+    .status.medium { background: var(--medium); }
+    .status.low { background: var(--success); }
 
-    /* Floating Action Buttons */
+    /* Floating Buttons */
     .floating-btn {
-      position: absolute; right: 20px;
-      border: none; border-radius: 5px;
+      position: absolute; 
+      right: 20px;
+      border: none; 
+      border-radius: 8px;
       z-index: 1000;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      cursor: pointer; font-size: 14px;   
-      padding: 8px 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      cursor: pointer; 
+      font-size: 0.9rem;   
+      padding: 0.7rem 1rem;
       white-space: nowrap;
-      font-family: "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .floating-btn:hover { transform: scale(1.1); }
-    #followBtn { background: #007bff; color: white; bottom: 60px; }
-    #toggleDirections { background: #28a745; color: white; bottom: 20px; }
+    .floating-btn:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+    
+    #followBtn { 
+      background: var(--primary); 
+      color: white; 
+      bottom: 20px; 
+    }
+    
+    #toggleDirections { 
+      background: var(--success); 
+      color: white; 
+      bottom: 80px; 
+    }
 
-    /* Add hamburger */
+    /* Notification Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, -10px);
+    }
+    
+    .toast.success {
+      background: var(--success);
+    }
+    
+    .toast.error {
+      background: var(--danger);
+    }
+    
+    .toast.warning {
+      background: var(--warning);
+    }
+
+    /* Hamburger menu */
     #hamburger {
       display: none;
-      font-size: 24px;
+      font-size: 1.5rem;
       cursor: pointer;
-      margin-right: 10px;
+      color: var(--dark);
+      background: none;
+      border: none;
+      padding: 0.3rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    
+    #hamburger:hover {
+      background: #f1f5f9;
     }
 
     /* Routing panel (desktop) */
     .leaflet-routing-container {
+      width: 100%;
       max-height: 250px;
       overflow-y: auto;
-      font-size: 13px;
+      font-size: 0.85rem;
       border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
       background: white;
+      border: 1px solid #e2e8f0;
     }
 
-    /* Mobile: sidebar hidden by default */
+    /* Loading animation */
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Mobile adjustments */
     @media (max-width: 768px) {
+      :root {
+        --sidebar-width: 100%;
+      }
+      
       #hamburger {
         display: block;
       }
+      
       #sidebar {
         display: none;
         position: absolute;
-        top: 50px;
+        top: 60px;
         left: 0;
         right: 0;
+        height: calc(100% - 60px);
         background: white;
         z-index: 1100;
+        width: 100%;
+        padding: 1.2rem;
+        box-shadow: 0 0 20px rgba(0,0,0,0.15);
       }
+      
       #sidebar.active {
-        display: block; /* show when active */
+        display: flex;
       }
-    }
-
-    /* Mobile adjustment for routing panel as bottom strip */
-    @media (max-width: 768px) {
+      
+      .floating-btn {
+        padding: 0.8rem;
+        font-size: 0; /* Hide text on mobile */
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        justify-content: center;
+      }
+      
+      .floating-btn i {
+        font-size: 1.2rem;
+        margin: 0;
+      }
+      
+      /* Mobile routing panel */
       .leaflet-routing-container {
         position: fixed;
-        top: 50px;
+        top: 60px;
         left: 0;
         right: 0;
         bottom: 0;
         width: 100%;
-        max-height: 20vh;        /* only take a narrow strip */
-        overflow-y: auto;        /* scroll if too many steps */
-        font-size: 12px;
-        padding: 6px;
-        background: rgba(255, 255, 255, 0.95);
-        border-top: 2px solid #ccc;
-        border-radius: 12px 12px 0 0;  
-        z-index: 1000;           /* stay above map */
+        max-height: 20vh;
+        overflow-y: auto;
+        font-size: 0.8rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.98);
+        border-top: 2px solid #e2e8f0;
+        border-radius: 15px 15px 0 0;
+        z-index: 1000;
       }
-    }       
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
-  <!-- index.html -->
 <body>
   <!-- Login -->
   <div id="loginBox">
@@ -249,26 +564,32 @@
   <!-- Dashboard --> 
   <div id="dashboard"> 
     <div id="navbar">
-      <span id="hamburger" onclick="toggleSidebar()">☰</span>
+      <div class="navbar-left">
+        <button id="hamburger" onclick="toggleSidebar()">☰</button>
         <h2 id="title">♻️ SAWCANS Dashboard</h2>
-        <button id="logoutBtn" onclick="logout()">Logout</button>
+      </div>
+      <button id="logoutBtn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
     <div class="wrapper"> 
         <div id="sidebar">
-            <h3>📊 Statistics</h3> 
-            <div id="stats"></div>
-            <h3>🗑️ Bin List</h3> 
-            <div id="binList"></div> 
-          </div>
+            <div class="sidebar-section">
+                <h3><i class="fas fa-chart-pie"></i> Statistics</h3> 
+                <div class="stats-grid" id="stats"></div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3><i class="fas fa-trash"></i> Bin List</h3> 
+                <div class="bin-list" id="binList"></div>
+            </div>
+        </div>
         <div id="map"></div>
-        <!-- Follow Depot Button -->
-        <button id="followBtn" class="floating-btn" title="Follow Depot">🚗 Follow Depot: ON</button>
-        <!-- Toggle Directions Button -->
-        <button id="toggleDirections" class="floating-btn" title="Toggle Directions">📍 Hide Directions</button>
-    </div> 
+        
+        <!-- Floating Action Buttons -->
+        <button id="followBtn" class="floating-btn" title="Follow Depot"><i class="fas fa-location-arrow"></i> Follow Depot: ON</button>
+        <button id="toggleDirections" class="floating-btn" title="Toggle Directions"><i class="fas fa-directions"></i> Hide Directions</button>
+    </div>
   </div>
 
-  <!-- main.js -->
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
@@ -279,10 +600,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
   <script>
-    function toggleSidebar() {
-      document.getElementById("sidebar").classList.toggle("active");
-    }
-
     // === Firebase Config ===
     const firebaseConfig = {
       apiKey: "AIzaSyAZeemtLknIl5GiUkVVJzkL5GAWVH2Ur74",
@@ -293,14 +610,32 @@
       messagingSenderId: "618650746243",
       appId: "1:618650746243:web:313250578e82d38d354ab6"
     };
+    
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const auth = firebase.auth();
+    
+    // Global variables
+    let binDataCache = {};
+    let lastUpdateTime = 0;
+    const UPDATE_THROTTLE = 10000; // 10 seconds
+    let markers = {};
+    let map;
+    let routeControl = null;
+    let depotMarker = null;
+    let depotLatLng = null;
+    let followDepot = true;
 
-    // Login
+    // Toggle sidebar function
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+
+    // Login function
     document.getElementById("loginForm").addEventListener("submit", function(e) {
-      e.preventDefault();  // prevent page reload
-      login();             // call your existing login() function
+      e.preventDefault();
+      login();
     });
 
     function login() {
@@ -319,22 +654,42 @@
 
     // Allow Enter key even if input is not focused
     document.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
+      if (e.key === "Enter") {
         const loginBox = document.getElementById("loginBox");
         if (loginBox && loginBox.style.display !== "none") {
-        e.preventDefault();
-        login(); // call the same login() function
+          e.preventDefault();
+          login();
         }
-    }
+      }
     });
 
+    // Logout function
     function logout() {
       auth.signOut().then(() => location.reload());
     }
 
+    // Updated Bins Info
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 100);
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
+
     // === Map & Data ===
     function initMap() {
-      const map = L.map('map').setView([5.4525, 100.2845], 17);
+      map = L.map('map').setView([5.4525, 100.2845], 17);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19, attribution: '&copy; OpenStreetMap'
       }).addTo(map);
@@ -349,6 +704,7 @@
           default: return "grey";
         }
       }
+      
       function createColoredIcon(color) {
         return new L.icon({
           iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
@@ -357,43 +713,97 @@
           popupAnchor: [1, -34], shadowSize: [41, 41]
         });
       }
-
-      const markers = {};
-      let routeControl = null;
-      let depotMarker = null;
-      let depotLatLng = null;
-      let followDepot = true;
+      
+      function createVehicleIcon() {
+        return L.divIcon({
+          html: '<i class="fa-solid fa-truck" style="color: green; font-size: 28px;"></i>',
+          className: 'custom-depot-icon',
+          iconSize: [30, 30],
+          iconAnchor: [15, 15],
+          popupAnchor: [0, -15]
+        });
+      }
 
       // Follow Depot toggle
       const followBtn = document.getElementById("followBtn");
       followBtn.addEventListener("click", () => {
         followDepot = !followDepot;
-        followBtn.innerText = followDepot ? "🚗 Follow Depot: ON" : "🚗 Follow Depot: OFF";
-        followBtn.style.background = followDepot ? "#007bff" : "gray";
+        followBtn.innerHTML = followDepot ? 
+          '<i class="fas fa-location-arrow"></i> Follow Depot: ON' : 
+          '<i class="fas fa-location-arrow"></i> Follow Depot: OFF';
+        followBtn.style.background = followDepot ? "var(--primary)" : "gray";
       });
+
+      function moveMarkerSmooth(marker, newLatLng) {
+        const duration = 1000; // 1 second animation
+        const steps = 20;
+        const latStep = (newLatLng.lat - marker.getLatLng().lat) / steps;
+        const lngStep = (newLatLng.lng - marker.getLatLng().lng) / steps;
+
+        let i = 0;
+        const interval = setInterval(() => {
+          if (i >= steps) {
+            clearInterval(interval);
+            return;
+          }
+          const lat = marker.getLatLng().lat + latStep;
+          const lng = marker.getLatLng().lng + lngStep;
+          marker.setLatLng([lat, lng]);
+          if (followDepot) map.panTo([lat, lng]);
+          i++;
+        }, duration / steps);
+      }
 
       // Depot live tracking
-      navigator.geolocation.watchPosition(
-        pos => {
-        depotLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude);
+      if ("geolocation" in navigator) {
+        navigator.geolocation.watchPosition(
+          pos => {
+            depotLatLng = L.latLng(pos.coords.latitude, pos.coords.longitude);
 
-        if (depotMarker) {
-          depotMarker.setLatLng(depotLatLng);
-        } else {
-          depotMarker = L.marker(depotLatLng, { icon: createColoredIcon("blue") })
-            .addTo(map).bindPopup("<b>🚛 Depot Location</b>").openPopup();
-        }
+            if (depotMarker) {
+              moveMarkerSmooth(depotMarker, depotLatLng);
+            } else {
+              depotMarker = L.marker(depotLatLng, { icon: createVehicleIcon() })
+                .addTo(map)
+                .bindPopup("<b>🚛 Depot Location</b>")
+                .openPopup();
+            }
 
-        if (followDepot) map.panTo(depotLatLng);
-        // Update route whenever depot moves
-        updateRoute();
-      });
+            if (followDepot) map.panTo(depotLatLng);
+            updateRoute();
+          },
+          err => {
+            // Handle errors (user denied, timeout, unavailable, etc.)
+            if (err.code === 1) {
+              alert("⚠️ Please turn on your device location and allow access to use SAWCANS.");
+            } else if (err.code === 2) {
+              alert("⚠️ Location unavailable. Please check your GPS and Refresh the page.");
+            } else if (err.code === 3) {
+              alert("⚠️ Location request timed out. Try again.");
+            } else {
+              alert("⚠️ Unable to access your location.");
+            }
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      } else {
+        alert("⚠️ Geolocation is not supported on this device or browser.");
+      }
 
-      // Load Bins from Firebase
+      // Load Bins from Firebase with throttling
       db.ref('bins').on('value', snapshot => {
+        const now = Date.now();
+        if (now - lastUpdateTime < UPDATE_THROTTLE) {
+          return; // Throttle updates
+        }
+        lastUpdateTime = now;
+        
         const bins = snapshot.val(); 
         if (!bins) return;
-
+        
+        // Cache the data
+        binDataCache = {...bins};
+        
         const binList = document.getElementById("binList");
         binList.innerHTML = "";
 
@@ -416,7 +826,7 @@
           if (markers[key]) {
             markers[key].setLatLng(latlng);
             markers[key].setIcon(icon);
-            markers[key].options.binData = bin; // ✅ update bin data
+            markers[key].options.binData = bin;
             markers[key].getPopup().setContent(
               `<b>${bin.name}</b><br>Fill: ${bin.fill}<br>Status: ${bin.status}`
             );
@@ -430,12 +840,16 @@
           const binCard = document.createElement("div");
           binCard.className = "bin-card";
           binCard.innerHTML = `
-            <b>${bin.name}</b><br>
-            Fill: ${bin.fill}<br>
-            Status: <span class="status ${status}">${bin.status}</span><br>
-            <span style="font-size: 12px; color: gray;">
-              Last Updated: 📅 ${bin.date} ⏰ ${bin.time}
-            </span>
+            <div class="bin-header">
+              <span class="bin-name">${bin.name}</span>
+              <span class="status ${status}">${bin.status}</span>
+            </div>
+            <div class="bin-details">
+              Fill: ${bin.fill}<br>
+              <span style="font-size: 12px; color: gray;">
+                Last Updated: 📅 ${bin.date} ⏰ ${bin.time}
+              </span>
+            </div>
           `;
           binList.appendChild(binCard);
 
@@ -447,50 +861,74 @@
 
         // Stats
         document.getElementById("stats").innerHTML = `
-          <div class="stat-box"><span>Total Bins</span><b>${total}</b></div>
-          <div class="stat-box"><span>Overflow</span><b>${overflow}</b></div>
-          <div class="stat-box"><span>High</span><b>${high}</b></div>
-          <div class="stat-box"><span>Medium</span><b>${medium}</b></div>
-          <div class="stat-box"><span>Low</span><b>${low}</b></div>
+          <div class="stat-box overflow"><div class="stat-value">${overflow}</div><div class="stat-label">Overflow</div></div>
+          <div class="stat-box high"><div class="stat-value">${high}</div><div class="stat-label">High</div></div>
+          <div class="stat-box medium"><div class="stat-value">${medium}</div><div class="stat-label">Medium</div></div>
+          <div class="stat-box low"><div class="stat-value">${low}</div><div class="stat-label">Low</div></div>
+          <div class="stat-box total"><div class="stat-value">${total}</div><div class="stat-label">Total</div></div>
         `;
 
         // Update route when bins change
         updateRoute();
-    });
-        // Route update
-        function updateRoute() {
-          if (!depotLatLng) {
-            console.log("⏳ Waiting for depot before routing...");
-            return;
-          }
-          if (Object.keys(markers).length === 0) {
-            console.log("⏳ Waiting for bins before routing...");
-            return;
-          }
+        
+        // Show update notification
+        showToast(`Updated ${Object.keys(bins).length} bins`, 'success');
+      });
+      
+      // Route Update
+      let lastActiveBins = []; // store previous active bins
 
-          const selectedWaypoints = [depotLatLng];
+      function updateRoute() {
+        if (!depotLatLng) {
+          console.log("⏳ Waiting for depot before routing...");
+          return;
+        }
+        if (Object.keys(markers).length === 0) {
+          console.log("⏳ Waiting for bins before routing...");
+          return;
+        }
 
-          for (const key in markers) {
-            const bin = markers[key].options.binData;
-            if (bin.status?.toLowerCase() === "overflow" || bin.status?.toLowerCase() === "high") {
-              selectedWaypoints.push(markers[key].getLatLng());
-            }
-          }
-
-          if (routeControl) {
-            map.removeControl(routeControl);
-            routeControl = null;
-          }
-
-          if (selectedWaypoints.length >= 2) {
-            routeControl = L.Routing.control({
-              waypoints: selectedWaypoints,
-              createMarker: () => null,
-              lineOptions: { styles: [{ color: 'red', weight: 4 }] },
-              router: L.Routing.osrmv1({ serviceUrl: 'https://router.project-osrm.org/route/v1' })
-            }).addTo(map);
+        // Collect only bins that are "overflow" or "high"
+        const currentActiveBins = [];
+        for (const key in markers) {
+          const bin = markers[key].options.binData;
+          if (bin.status?.toLowerCase() === "overflow" || bin.status?.toLowerCase() === "high") {
+            currentActiveBins.push(key);
           }
         }
+
+        // Check if list changed compared to last time
+        const same =
+          currentActiveBins.length === lastActiveBins.length &&
+          currentActiveBins.every((val, idx) => val === lastActiveBins[idx]);
+
+        if (same) {
+          console.log("✅ No change in active bins → skipping route refresh");
+          return; // don't refresh route unnecessarily
+        }
+
+        // Save new active bins
+        lastActiveBins = [...currentActiveBins];
+
+        // Remove old route if exists
+        if (routeControl) {
+          map.removeControl(routeControl);
+          routeControl = null;
+        }
+
+        // Add new route
+        if (currentActiveBins.length > 0) {
+          const selectedWaypoints = [depotLatLng];
+          currentActiveBins.forEach(key => selectedWaypoints.push(markers[key].getLatLng()));
+
+          routeControl = L.Routing.control({
+            waypoints: selectedWaypoints,
+            createMarker: () => null,
+            lineOptions: { styles: [{ color: 'blue', weight: 3 }] },
+            router: L.Routing.osrmv1({ serviceUrl: 'https://router.project-osrm.org/route/v1' })
+          }).addTo(map);
+        }
+      }
 
       // Routing panel toggle (bind once)
       document.getElementById("toggleDirections").addEventListener("click", () => {
@@ -498,13 +936,12 @@
         if (!panel) return;
         if (panel.style.display === "none") {
           panel.style.display = "block";
-          document.getElementById("toggleDirections").innerText = "📍 Hide Directions";
+          document.getElementById("toggleDirections").innerHTML = '<i class="fas fa-directions"></i> Hide Directions';
         } else {
           panel.style.display = "none";
-          document.getElementById("toggleDirections").innerText = "📍 Show Directions";
+          document.getElementById("toggleDirections").innerHTML = '<i class="fas fa-directions"></i> Show Directions';
         }
       });
-      
     }
   </script>
 </body>
