@@ -845,9 +845,11 @@
               <span class="status ${status}">${bin.status}</span>
             </div>
             <div class="bin-details">
-              Fill: ${bin.fill}<br>
+              🗑️ Fill: ${bin.fill}<br>
+              🔋 Battery: ${bin.batteryPercent !== undefined ? bin.batteryPercent + "%" : "N/A" }<br>
               <span style="font-size: 12px; color: gray;">
-                Last Updated: 📅 ${bin.date} ⏰ ${bin.time}
+                Last Updated: <br>
+                📅 ${bin.date} ⏰ ${bin.time}
               </span>
             </div>
           `;
@@ -876,59 +878,80 @@
       });
       
       // Route Update
-      let lastActiveBins = []; // store previous active bins
+    let lastActiveBins = [];
+    let lastDepotLatLng = null;
 
-      function updateRoute() {
-        if (!depotLatLng) {
-          console.log("⏳ Waiting for depot before routing...");
-          return;
+    function haversineDistance(latlng1, latlng2) {
+    const R = 6371000; // meters
+    const toRad = x => (x * Math.PI) / 180;
+
+    const dLat = toRad(latlng2.lat - latlng1.lat);
+    const dLng = toRad(latlng2.lng - latlng1.lng);
+
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(latlng1.lat)) *
+        Math.cos(toRad(latlng2.lat)) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // distance in meters
+    }
+
+    function updateRoute() {
+    if (!depotLatLng || Object.keys(markers).length === 0) return;
+
+    const currentActiveBins = [];
+    for (const key in markers) {
+        const bin = markers[key].options.binData;
+        if (bin.status?.toLowerCase() === "overflow" || bin.status?.toLowerCase() === "high") {
+        currentActiveBins.push(key);
         }
-        if (Object.keys(markers).length === 0) {
-          console.log("⏳ Waiting for bins before routing...");
-          return;
-        }
+    }
 
-        // Collect only bins that are "overflow" or "high"
-        const currentActiveBins = [];
-        for (const key in markers) {
-          const bin = markers[key].options.binData;
-          if (bin.status?.toLowerCase() === "overflow" || bin.status?.toLowerCase() === "high") {
-            currentActiveBins.push(key);
-          }
-        }
+    // Check if bins same
+    const sameBins =
+        currentActiveBins.length === lastActiveBins.length &&
+        currentActiveBins.every((val, idx) => val === lastActiveBins[idx]);
 
-        // Check if list changed compared to last time
-        const same =
-          currentActiveBins.length === lastActiveBins.length &&
-          currentActiveBins.every((val, idx) => val === lastActiveBins[idx]);
+    // Check if depot moved significantly (>10m)
+    let depotMoved = false;
+    if (lastDepotLatLng) {
+        const dist = haversineDistance(lastDepotLatLng, depotLatLng);
+        depotMoved = dist > 10; // meters
+    } else {
+        depotMoved = true; // first time
+    }
 
-        if (same) {
-          console.log("✅ No change in active bins → skipping route refresh");
-          return; // don't refresh route unnecessarily
-        }
+    if (sameBins && !depotMoved) {
+        console.log("✅ No change in bins or depot → skipping route refresh");
+        return;
+    }
 
-        // Save new active bins
-        lastActiveBins = [...currentActiveBins];
+    // Save new states
+    lastActiveBins = [...currentActiveBins];
+    lastDepotLatLng = depotLatLng;
 
-        // Remove old route if exists
-        if (routeControl) {
-          map.removeControl(routeControl);
-          routeControl = null;
-        }
+    // Remove old route
+    if (routeControl) {
+        map.removeControl(routeControl);
+        routeControl = null;
+    }
 
-        // Add new route
-        if (currentActiveBins.length > 0) {
-          const selectedWaypoints = [depotLatLng];
-          currentActiveBins.forEach(key => selectedWaypoints.push(markers[key].getLatLng()));
+    // Build new route
+    if (currentActiveBins.length > 0) {
+        const selectedWaypoints = [depotLatLng];
+        currentActiveBins.forEach(key => selectedWaypoints.push(markers[key].getLatLng()));
 
-          routeControl = L.Routing.control({
-            waypoints: selectedWaypoints,
-            createMarker: () => null,
-            lineOptions: { styles: [{ color: 'blue', weight: 3 }] },
-            router: L.Routing.osrmv1({ serviceUrl: 'https://router.project-osrm.org/route/v1' })
-          }).addTo(map);
-        }
-      }
+        routeControl = L.Routing.control({
+        waypoints: selectedWaypoints,
+        createMarker: () => null,
+        lineOptions: { styles: [{ color: 'blue', weight: 4 }] }
+        }).addTo(map);
+    }
+    }
 
       // Routing panel toggle (bind once)
       document.getElementById("toggleDirections").addEventListener("click", () => {
